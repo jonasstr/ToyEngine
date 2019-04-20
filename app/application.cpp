@@ -1,11 +1,11 @@
 
-#include "../engine/window.h"
-#include "../engine/renderer/renderer.h"
-#include "../engine/renderer/shader.h"
-#include "../engine/renderer/primitives/vertex_array.h"
-#include "../engine/renderer/primitives/vertex_buffer.h"
-#include "../engine/renderer/primitives/index_buffer.h"
-#include "../engine/core.h"
+#include "core/window.h"
+#include "renderer/renderer.h"
+#include "renderer/shader.h"
+#include "renderer/primitives/vertex_array.h"
+#include "renderer/primitives/vertex_buffer.h"
+#include "renderer/primitives/index_buffer.h"
+#include "core/core.h"
 
 int main() {
 
@@ -24,7 +24,7 @@ int main() {
             3, 1, 2
     };
 
-    ShaderProgram program("./../res/default.glsl");
+    ShaderProgram program("../src/res/default.glsl");
 
     VertexArray va;
     VertexBuffer vb(positions, 4 * 3 * sizeof(float));
@@ -38,7 +38,7 @@ int main() {
     while (!window.shouldClose()) {
 
         renderer.prepare();
-        renderer.render(va, program);
+        renderer.render(va, ib, program);
         window.update();
     }
     window.destroy();

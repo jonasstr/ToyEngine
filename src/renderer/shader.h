@@ -16,7 +16,7 @@ private:
 
 public:
     // Constructs a new shader with the given type and source code.
-    Shader(unsigned int pType, std::string &pSource);
+    Shader(unsigned int type, std::string &source);
 
     // Compiles this shader and returns its ID.
     unsigned int compile();
@@ -48,7 +48,7 @@ public:
     // Reads the shaders from the file path and set the shader sources.
     ShaderProgram(const std::string &filePath);
 
-    void use() const;
+    void bind() const;
 
     // Utility uniform functions.
     void setBool(const std::string &name, bool value) const;

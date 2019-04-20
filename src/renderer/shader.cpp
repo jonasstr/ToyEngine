@@ -1,6 +1,6 @@
 #include "shader.h"
 
-Shader::Shader(unsigned int pType, std::string &pSource) : type{pType}, source{pSource} {}
+Shader::Shader(unsigned int type, std::string &source) : type{type}, source{source} {}
 
 unsigned int Shader::compile() {
     unsigned int id = glCreateShader(type);
@@ -59,7 +59,7 @@ void ShaderProgram::createProgram() {
     glDeleteShader(fs);
 }
 
-void ShaderProgram::use() const {
+void ShaderProgram::bind() const {
     glUseProgram(id);
 }
 

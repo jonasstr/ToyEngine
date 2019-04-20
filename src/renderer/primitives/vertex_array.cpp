@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-#include "../../core.h"
+#include "core/core.h"
 
 VertexArray::VertexArray() {
     GL_CALL(glGenVertexArrays(1, &id));

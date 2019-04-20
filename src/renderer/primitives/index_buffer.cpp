@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-#include "../../core.h"
+#include "core/core.h"
 
 IndexBuffer::IndexBuffer(const unsigned int *data, unsigned int count) : count(count) {
     ASSERT(sizeof(unsigned int) == sizeof(GLuint));

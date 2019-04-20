@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-#include "../../core.h"
+#include "core/core.h"
 
 VertexBuffer::VertexBuffer(const void *data, unsigned int size) {
     GL_CALL(glGenBuffers(1, &id));
