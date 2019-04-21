@@ -23,70 +23,74 @@ void Shader::checkCompileErrors(unsigned int id) {
 }
 
 // Read the shaders from the file path and set the shader sources.
-    ShaderProgram::ShaderProgram(
-    const std::string &filePath) {
-        std::ifstream stream(filePath);
-        if (stream.fail()) {
-            std::cerr << "ERROR::SHADER_PROGRAM: Could not find shader " << filePath << "!" << std::endl;
-        }
+ShaderProgram::ShaderProgram(
+        const std::string &filePath) {
+    std::ifstream stream(filePath);
+    if (stream.fail()) {
+        std::cerr << "ERROR::SHADER_PROGRAM: Could not find shader " << filePath << "!" << std::endl;
+    }
 
-        enum class ShaderType {
-            NONE = -1, VERTEX = 0, FRAGMENT = 1
-        };
-        std::string line;
-        std::stringstream ss[2];
-        ShaderType type = ShaderType::NONE;
-        // Put current line of stream into line.
-        while (getline(stream, line)) {
-            // Search within line string.
-            if (line.find("#shader") != std::string::npos) {
-                if (line.find("vertex") != std::string::npos) {
-                    type = ShaderType::VERTEX;
-                } else if (line.find("fragment") != std::string::npos) {
-                    type = ShaderType::FRAGMENT;
-                }
-                // ShaderParser specific code found.
-            } else {
-                ss[(int) type] << line << '\n';
+    enum class ShaderType {
+        NONE = -1, VERTEX = 0, FRAGMENT = 1
+    };
+    std::string line;
+    std::stringstream ss[2];
+    ShaderType type = ShaderType::NONE;
+    // Put current line of stream into line.
+    while (getline(stream, line)) {
+        // Search within line string.
+        if (line.find("#shader") != std::string::npos) {
+            if (line.find("vertex") != std::string::npos) {
+                type = ShaderType::VERTEX;
+            } else if (line.find("fragment") != std::string::npos) {
+                type = ShaderType::FRAGMENT;
             }
+            // ShaderParser specific code found.
+        } else {
+            ss[(int) type] << line << '\n';
         }
-        vertexSource = ss[(int) ShaderType::VERTEX].str();
-        fragmentSource = ss[(int) ShaderType::FRAGMENT].str();
-        createProgram();
     }
+    vertexSource = ss[(int) ShaderType::VERTEX].str();
+    fragmentSource = ss[(int) ShaderType::FRAGMENT].str();
+    createProgram();
+}
 
-    void ShaderProgram::createProgram() {
+void ShaderProgram::createProgram() {
 
-        GL_CALL(id = glCreateProgram());
-        unsigned int vs = Shader(GL_VERTEX_SHADER, vertexSource).compile();
-        unsigned int fs = Shader(GL_FRAGMENT_SHADER, fragmentSource).compile();
+    GL_CALL(id = glCreateProgram());
+    unsigned int vs = Shader(GL_VERTEX_SHADER, vertexSource).compile();
+    unsigned int fs = Shader(GL_FRAGMENT_SHADER, fragmentSource).compile();
 
-        GL_CALL(glAttachShader(id, vs));
-        GL_CALL(glAttachShader(id, fs));
-        GL_CALL(glLinkProgram(id));
-        GL_CALL(glValidateProgram(id));
+    GL_CALL(glAttachShader(id, vs));
+    GL_CALL(glAttachShader(id, fs));
+    GL_CALL(glLinkProgram(id));
+    GL_CALL(glValidateProgram(id));
 
-        GL_CALL(glDeleteShader(vs));
-        GL_CALL(glDeleteShader(fs));
+    GL_CALL(glDeleteShader(vs));
+    GL_CALL(glDeleteShader(fs));
+}
+
+void ShaderProgram::bind() const {
+    GL_CALL(glUseProgram(id));
+}
+
+void ShaderProgram::setUniform1i(const std::string &name, int v0) {
+    GL_CALL(glUniform1i(getUniformLocation(name), v0));
+}
+
+void ShaderProgram::setUniform4f(const std::string &name, float v0, float v1, float v2, float v3) {
+    GL_CALL(glUniform4f(getUniformLocation(name), v0, v1, v2, v3));
+}
+
+int ShaderProgram::getUniformLocation(const std::string &name) {
+
+    if (uniformLocationCache.find(name) != uniformLocationCache.end()) {
+        return uniformLocationCache[name];
     }
-
-    void ShaderProgram::bind() const {
-        GL_CALL(glUseProgram(id));
+    GL_CALL(int location = glGetUniformLocation(id, name.c_str()));
+    if (location == -1) {
+        std::cout << "WARNING: shader uniform " << name << " doesn't exist!" << std::endl;
     }
-
-    void ShaderProgram::setUniform4f(const std::string &name, float v0, float v1, float v2, float v3) {
-        GL_CALL(glUniform4f(getUniformLocation(name), v0, v1, v2, v3));
-    }
-
-    int ShaderProgram::getUniformLocation(const std::string &name) {
-
-        if (uniformLocationCache.find(name) != uniformLocationCache.end()) {
-            return uniformLocationCache[name];
-        }
-        GL_CALL(int location = glGetUniformLocation(id, name.c_str()));
-        if (location == -1) {
-            std::cout << "WARNING: shader uniform " << name << " doesn't exist!" << std::endl;
-        }
-        uniformLocationCache[name] = location;
-        return location;
-    }
+    uniformLocationCache[name] = location;
+    return location;
+}
