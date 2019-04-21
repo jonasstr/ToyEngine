@@ -5,7 +5,9 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
-add_executable(Toy src/core/glad.c
+add_executable(Toy
+        src/core/glad.c
+        src/core/stb_image.cpp
         src/renderer/shader.h
         src/renderer/shader.cpp
         app/application.cpp

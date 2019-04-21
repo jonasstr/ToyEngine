@@ -1,13 +1,15 @@
 
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <unordered_map>
 
 #include <glad/glad.h>
+
+#include <core/core.h>
 
 class Shader {
 private:
@@ -23,16 +25,7 @@ public:
 
 private:
     // Utility function for checking shader compilation/linking errors.
-    static void checkCompileErrors(unsigned int id) {
-        int success;
-        char infoLog[1024];
-        glGetShaderiv(id, GL_COMPILE_STATUS, &success);
-        if (!success) {
-            glGetShaderInfoLog(id, 1024, nullptr, infoLog);
-            std::cerr << "ERROR::SHADER_COMPILATION: " << "\n" << infoLog
-                      << "-----------------------------------------------" << std::endl;
-        }
-    };
+    static void checkCompileErrors(unsigned int id);
 };
 
 class ShaderProgram {
@@ -42,7 +35,11 @@ private:
     // The vertex and fragment shader code.
     std::string vertexSource, fragmentSource;
 
+    std::unordered_map<std::string, int> uniformLocationCache;
+
     void createProgram();
+
+    int getUniformLocation(const std::string &name);
 
 public:
     // Reads the shaders from the file path and set the shader sources.
@@ -51,13 +48,7 @@ public:
     void bind() const;
 
     // Utility uniform functions.
-    void setBool(const std::string &name, bool value) const;
-
-    void setInt(const std::string &name, int value) const;
-
-    void setFloat(const std::string &name, float value) const;
+    void setUniform4f(const std::string &name, float v1, float v2, float v3, float v4);
 
     inline unsigned int getId() const { return id; }
 };
-
-#endif
