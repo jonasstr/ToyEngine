@@ -1,6 +1,7 @@
 
 #include <renderer/texture.h>
 #include <cmath>
+#include "models/raw_model.h"
 #include "core/window.h"
 #include "renderer/renderer.h"
 #include "renderer/shader.h"
@@ -32,15 +33,7 @@ int main() {
     //GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     //GL_CALL(glEnable(GL_BLEND));
 
-    VertexArray va;
-    VertexBuffer vb(positions, 4 * 4 * sizeof(float));
-
-    VertexBufferLayout layout;
-    layout.addAttribute<float>(2);
-    layout.addAttribute<float>(2);
-
-    va.addBuffer(vb, layout);
-    IndexBuffer ib(indices, 6);
+    RawModel model(positions, indices);
 
     Texture texture("../res/smiley.png");
     texture.bind();
@@ -51,7 +44,7 @@ int main() {
 
         renderer.prepare();
         //program.setUniform4f("u_Color", 1.0f, sin(glfwGetTime()), cos(glfwGetTime()), 1.0f);
-        renderer.render(va, ib, program);
+        renderer.render(model, program);
         window.update();
     }
     window.destroy();

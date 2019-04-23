@@ -2,7 +2,7 @@
 
 class VertexBuffer {
 
-private:
+public:
 
     unsigned int id;
 

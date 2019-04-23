@@ -6,14 +6,16 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
 add_executable(Toy
+        app/application.cpp
+        src/models/raw_model.h
+        src/models/raw_model.cpp
         src/core/glad.c
         src/core/stb_image.cpp
-        src/renderer/shader.h
-        src/renderer/shader.cpp
-        app/application.cpp
         src/core/core.h
         src/core/window.cpp
         src/core/window.h
+        src/renderer/shader.h
+        src/renderer/shader.cpp
         src/renderer/renderer.cpp
         src/renderer/renderer.h
         src/renderer/primitives/vertex_array.cpp

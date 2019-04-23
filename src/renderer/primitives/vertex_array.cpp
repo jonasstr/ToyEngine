@@ -22,12 +22,15 @@ void VertexArray::unbind() const {
     GL_CALL(glBindVertexArray(0));
 }
 
-void VertexArray::addBuffer(const VertexBuffer &buffer, const VertexBufferLayout &layout) {
+void VertexArray::addBuffer(const VertexBuffer &buffer, const VertexBufferLayout &layout) const {
 
     bind();
     buffer.bind();
     const auto &attributes = layout.getAttributes();
     unsigned int offset = 0;
+
+    int boundBuffer;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundBuffer);
 
     for (unsigned int i = 0; i < attributes.size(); i++) {
 

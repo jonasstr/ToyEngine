@@ -10,9 +10,8 @@ void Renderer::prepare() const {
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 }
 
-void Renderer::render(const VertexArray& va, const IndexBuffer& ib, const ShaderProgram& program) const {
-    va.bind();
-    ib.bind();
+void Renderer::render(const RawModel& model, const ShaderProgram& program) const {
+    model.bindAll();
     program.bind();
-    GL_CALL(glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr));
+    GL_CALL(glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, nullptr));
 }
